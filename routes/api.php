@@ -11,10 +11,10 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/mobile/login', [AuthController::class, 'loginMobile']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/mobile/logout', [AuthController::class, 'logoutMobile']);
     Route::get('/me', [AuthController::class, 'me']);
 });
 
