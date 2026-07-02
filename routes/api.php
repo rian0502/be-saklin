@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\OutletController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -72,6 +73,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('permission:customers.create')->post('customers', [CustomerController::class, 'store']);
     Route::middleware('permission:customers.update')->match(['put', 'patch'], 'customers/{customer}', [CustomerController::class, 'update']);
     Route::middleware('permission:customers.delete')->delete('customers/{customer}', [CustomerController::class, 'destroy']);
+
+    Route::middleware('permission:promotions.view')->group(function () {
+        Route::get('promotions', [PromotionController::class, 'index']);
+        Route::get('promotions/{promotion}', [PromotionController::class, 'show']);
+    });
+    Route::middleware('permission:promotions.create')->post('promotions', [PromotionController::class, 'store']);
+    Route::middleware('permission:promotions.update')->match(['put', 'patch'], 'promotions/{promotion}', [PromotionController::class, 'update']);
+    Route::middleware('permission:promotions.delete')->delete('promotions/{promotion}', [PromotionController::class, 'destroy']);
 
 });
 
