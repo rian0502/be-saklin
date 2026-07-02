@@ -14,34 +14,45 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $outlet = Outlet::where('key', 'OUTLET-01')->first();
+        $outlet = Outlet::where('key', 'OUTLET-01')->firstOrFail();
 
-        $owner = User::firstOrCreate(
-            ['email' => 'owner@saklin.test'],
+        $users = [
             [
-                'outlet_id' => $outlet->id,
                 'name' => 'Owner Saklin',
-                'password' => Hash::make('password123'),
-                'status' => 'active',
-            ]
-        );
-
-        if (! $owner->hasRole('owner')) {
-            $owner->assignRole('owner');
-        }
-
-        $cashier = User::firstOrCreate(
-            ['email' => 'cashier@saklin.test'],
+                'email' => 'owner@saklin.test',
+                'role' => 'owner',
+            ],
             [
-                'outlet_id' => $outlet->id,
+                'name' => 'Manager Outlet 1',
+                'email' => 'manager@saklin.test',
+                'role' => 'outlet_manager',
+            ],
+            [
                 'name' => 'Kasir Outlet 1',
-                'password' => Hash::make('password123'),
-                'status' => 'active',
-            ]
-        );
+                'email' => 'cashier@saklin.test',
+                'role' => 'cashier',
+            ],
+            [
+                'name' => 'Staff Outlet 1',
+                'email' => 'staff@saklin.test',
+                'role' => 'staff',
+            ],
+        ];
 
-        if (! $cashier->hasRole('cashier')) {
-            $cashier->assignRole('cashier');
+        foreach ($users as $data) {
+            $user = User::updateOrCreate(
+                [
+                    'email' => $data['email'],
+                ],
+                [
+                    'outlet_id' => $outlet->id,
+                    'name' => $data['name'],
+                    'password' => Hash::make('password123'),
+                    'status' => 'active',
+                ]
+            );
+
+            $user->syncRoles([$data['role']]);
         }
     }
 }
